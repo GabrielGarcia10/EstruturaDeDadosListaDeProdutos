@@ -36,16 +36,52 @@ public class BDGerenciador {
     }
 
     public Produtos[] listar() {
-      
-        return null;
+        Produtos[] p = new Produtos[this.length()];
+        int i;
+        Produtos noh;
+        for(i = 0, noh = this.primeiro; noh != null; i++, noh = noh.getProximo()){
+            p[i] = noh;
+        }
+        return p;
     }
     public int length(){
-        
-         return 0;
+        int i;
+        Produtos noh;
+        for(i = 0, noh = this.primeiro; noh != null; i++, noh = noh.getProximo()){}
+         return i;
     }
 
+    private int sort(Produtos s1, Produtos s2){
+       return s1.getNome().compareTo (s2.getNome());
+    }
+    
     public void ordenarporNome() {
-
+        Produtos temp;
+        Produtos noh;
+        int i;
+        int s = 1;
+        while(s != 1){
+            s = 0;
+            for(i = 0, noh = this.primeiro; noh.getProximo() != this.ultimo; i++, noh = noh.getProximo()){
+                if(i == 0){
+                    //Vez do primeiro
+                    s = 1;
+                    if(sort(noh, noh.getProximo()) == 1){
+                        temp = noh;
+                        this.primeiro = noh.getProximo();
+                        temp.setProximo(this.primeiro.getProximo());
+                        this.primeiro.setProximo(temp);
+                    }
+                }
+                if( sort(noh.getProximo(), noh.getProximo().getProximo()) == 1){
+                    s = 1;
+                    temp = noh.getProximo();
+                    noh.setProximo( temp.getProximo());
+                    temp.setProximo(noh.getProximo().getProximo());
+                    noh.getProximo().setProximo(temp);
+                }
+            }
+        }
     }
 
     private String linha(Produtos produto) {
@@ -53,10 +89,8 @@ public class BDGerenciador {
     }
 
     public boolean existeID(int id) {
-       
         
-        return false;
-
+        return ((id <= this.length()) ? true : false);
     }
 
 }
