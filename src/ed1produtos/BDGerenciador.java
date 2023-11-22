@@ -26,7 +26,11 @@ public class BDGerenciador {
     public void removerPosicao(int pos) {
 
     }
-
+    
+    public Produtos buscarPosicao(int pos) {
+       return null;
+    }
+    
     public Produtos buscarCodigo(int codigo) {
        return null;
     }
