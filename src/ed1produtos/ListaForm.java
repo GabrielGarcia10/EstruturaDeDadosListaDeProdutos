@@ -13,11 +13,13 @@ import javax.swing.DefaultListModel;
 public class ListaForm extends javax.swing.JFrame {
 
     public BDGerenciador bdProduto;
+    private DefaultListModel modelList;
     /**
      * Creates new form ListaForm
      */
     public ListaForm() {
         bdProduto = new BDGerenciador();
+        modelList = new DefaultListModel();
         initComponents();
     }
 
@@ -61,6 +63,11 @@ public class ListaForm extends javax.swing.JFrame {
         });
 
         jButton3.setText("Remover");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
 
         jButton4.setText("Ordenar");
 
@@ -120,8 +127,17 @@ public class ListaForm extends javax.swing.JFrame {
         cad.setVisible(true);
     }//GEN-LAST:event_jButton2ActionPerformed
 
-    public void carregar(){
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        // TODO add your handling code here:
         
+    }//GEN-LAST:event_jButton3ActionPerformed
+
+    public void carregar(){
+        modelList.clear();
+        for (Produtos listar : bdProduto.listar()) {
+            modelList.addElement(listar);
+        }
+        liLista.setModel(modelList);
     }
     /**
      * @param args the command line arguments
