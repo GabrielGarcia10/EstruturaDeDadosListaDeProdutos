@@ -20,15 +20,65 @@ public class BDGerenciador {
     }
 
     public void inserirFim(Produtos produto) {
-      
+        //se estiver vazio
+      if(primeiro == null){
+          primeiro = ultimo = produto; 
+          //se n estiver vazio
+      }else{
+          ultimo.setProximo(produto);
+          ultimo = produto;
+      }
     }
 
     public void removerPosicao(int pos) {
-
+        
+        if(pos < 0 || pos >= length()){
+            System.out.println("Posição invalida");
+            return; 
+        }
+        if (pos ==0){
+            //remover o primeiro
+            primeiro = primeiro.getProximo();
+            if(primeiro == null){
+                //caso a lista fique vazia
+                ultimo =  null;
+            }
+        }else{
+            Produtos nohAnterior = primeiro;
+            for(int i =0; i< pos -1 ; i++){
+                nohAnterior = nohAnterior.getProximo();
+            }
+            //remover de uma posição especifica 
+            Produtos nohRemover = nohAnterior.getProximo();
+            nohAnterior.setProximo(nohRemover.getProximo());
+            
+            if(nohRemover == ultimo){
+                ultimo = nohAnterior;
+            }
+        }
     }
     
     public Produtos buscarPosicao(int pos) {
-       return null;
+        
+        if(pos < 0 || pos >= length()){
+              System.out.println("Posição invalida! ");
+              return null;
+        }
+       
+       Produtos nohAtual  = primeiro; 
+       for (int i =0; i< pos ; i++){
+           nohAtual = nohAtual.getProximo();
+       }
+       int posicaoDesej = 2;
+       Produtos nohDesejado = buscarPosicao(posicaoDesej);
+       
+       if(nohDesejado != null){
+           System.out.println("Produto encontrado: " +nohDesejado.getNome());
+       }else{
+           System.out.println("Produto não encontrado na posição desejada.");
+       }
+       
+       return nohAtual; 
     }
     
     public Produtos buscarCodigo(int codigo) {
