@@ -185,6 +185,9 @@ public class CadEditForm extends javax.swing.JFrame {
         }
         if(txtCodigo.getText().equals("")){
              txtCodigo.setText("1");
+        }else if(bdProduto.buscarCodigo(Integer.parseInt(txtCodigo.getText())) != null){
+            JOptionPane.showMessageDialog(rootPane, "O código "+txtCodigo.getText()+" já existe!");
+            return;
         }
         salvar();
         telaLista.carregar();
