@@ -21,9 +21,10 @@ public class CadEditForm extends javax.swing.JFrame {
      * Creates new form CadEditForm
      */
     public CadEditForm(BDGerenciador bdProduto) {
-       produto = null;
+        produto = null;
         this.bdProduto=bdProduto;
         initComponents();
+        formUtilities.centerScreen(this);
     }
     
     public void editar(Produtos p){
@@ -178,6 +179,13 @@ public class CadEditForm extends javax.swing.JFrame {
 
     private void btnSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarActionPerformed
         // TODO add your handling code here:
+         if (txtNome.getText().equals("") || txtValor.getText().equals("") ){
+            JOptionPane.showMessageDialog(rootPane, "É necessario preencher os campos de nome e valor!");
+            return;
+        }
+        if(txtCodigo.getText().equals("")){
+             txtCodigo.setText("1");
+        }
         salvar();
         telaLista.carregar();
         this.dispose();
@@ -185,14 +193,14 @@ public class CadEditForm extends javax.swing.JFrame {
 
     private void salvar(){
         if(editar){
-            this.editP.setCodigo(Integer.parseInt(txtCodigo.getText()));
+            bdProduto.alterarCodigo(this.editP,Integer.parseInt(txtCodigo.getText()));
             this.editP.setNome(txtNome.getText());
             this.editP.setQuantidade((Integer)spQuantidade.getValue());
             this.editP.setValor(txtValor.getText());
             this.editP.setDescricao(txtDescricao.getText());
         }else{
             Produtos p = new Produtos();
-            p.setCodigo(Integer.parseInt(txtCodigo.getText()));
+            bdProduto.alterarCodigo(p,Integer.parseInt(txtCodigo.getText()));
             p.setNome(txtNome.getText());
             p.setQuantidade((Integer)spQuantidade.getValue());
             p.setValor(txtValor.getText());

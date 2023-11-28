@@ -5,6 +5,7 @@
 package ed1produtos;
 
 import javax.swing.DefaultListModel;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -21,6 +22,7 @@ public class ListaForm extends javax.swing.JFrame {
         bdProduto = new BDGerenciador();
         modelList = new DefaultListModel();
         initComponents();
+        formUtilities.centerScreen(this);
     }
 
     /**
@@ -39,6 +41,7 @@ public class ListaForm extends javax.swing.JFrame {
         btnEditar = new javax.swing.JButton();
         btnRemover = new javax.swing.JButton();
         btnOrdenar = new javax.swing.JButton();
+        comboBoxOrdenar = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Gerenciador de Produtos");
@@ -76,6 +79,8 @@ public class ListaForm extends javax.swing.JFrame {
             }
         });
 
+        comboBoxOrdenar.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Nome", "Código" }));
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -91,11 +96,16 @@ public class ListaForm extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGap(50, 50, 50)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 429, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel1)
                         .addGap(85, 85, 85))
-                    .addComponent(btnOrdenar))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                            .addGap(91, 91, 91)
+                            .addComponent(comboBoxOrdenar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(btnOrdenar))
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 429, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(51, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -104,7 +114,9 @@ public class ListaForm extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnOrdenar)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnOrdenar)
+                    .addComponent(comboBoxOrdenar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -127,21 +139,37 @@ public class ListaForm extends javax.swing.JFrame {
 
     private void btnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarActionPerformed
         // TODO add your handling code here:
-        CadEditForm cad = new CadEditForm(bdProduto);
-        cad.telaLista=this;
-        cad.editar(bdProduto.buscarPosicao(liLista.getSelectedIndex()));
-        cad.setVisible(true);
+        if(liLista.getSelectedIndex() == -1){
+            JOptionPane.showMessageDialog(rootPane, "Selecione um item da lista!");
+        }else{
+            CadEditForm cad = new CadEditForm(bdProduto);
+            cad.telaLista=this;
+            cad.editar(bdProduto.buscarPosicao(liLista.getSelectedIndex()));
+            cad.setVisible(true);
+        }
     }//GEN-LAST:event_btnEditarActionPerformed
 
     private void btnRemoverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRemoverActionPerformed
         // TODO add your handling code here:
-        bdProduto.removerPosicao(liLista.getSelectedIndex());
-        carregar();
+        if(liLista.getSelectedIndex() == -1){
+            JOptionPane.showMessageDialog(rootPane, "Selecione um item da lista!");
+        }else{
+            bdProduto.removerPosicao(liLista.getSelectedIndex());
+            carregar();
+        }
     }//GEN-LAST:event_btnRemoverActionPerformed
 
     private void btnOrdenarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOrdenarActionPerformed
         // TODO add your handling code here:
-        bdProduto.ordenarporNome();
+        if(bdProduto.length() == 0){
+            JOptionPane.showMessageDialog(rootPane, "A lista está vazia!");
+            return;
+        }
+        if(comboBoxOrdenar.getSelectedIndex() == 0){
+            bdProduto.ordenarporNome();
+        }else{
+            bdProduto.ordenarporCodigo();
+        }
         carregar();
     }//GEN-LAST:event_btnOrdenarActionPerformed
 
@@ -192,6 +220,7 @@ public class ListaForm extends javax.swing.JFrame {
     private javax.swing.JButton btnEditar;
     private javax.swing.JButton btnOrdenar;
     private javax.swing.JButton btnRemover;
+    private javax.swing.JComboBox<String> comboBoxOrdenar;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JList<String> liLista;

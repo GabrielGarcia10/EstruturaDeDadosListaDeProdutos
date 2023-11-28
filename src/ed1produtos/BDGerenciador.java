@@ -66,27 +66,29 @@ public class BDGerenciador {
         }
        
        Produtos nohAtual  = primeiro; 
-       for (int i =0; i< pos ; i++){
+       for (int i = 0; i < pos ; i++){
            nohAtual = nohAtual.getProximo();
-       }
-       int posicaoDesej = 2;
-       Produtos nohDesejado = buscarPosicao(posicaoDesej);
-       
-       if(nohDesejado != null){
-           System.out.println("Produto encontrado: " +nohDesejado.getNome());
-       }else{
-           System.out.println("Produto não encontrado na posição desejada.");
        }
        
        return nohAtual; 
     }
     
     public Produtos buscarCodigo(int codigo) {
-       return null;
+       
+       for (Produtos noh = this.primeiro; noh != null ; noh = noh.getProximo()){
+           if(noh.getCodigo() == codigo){
+               return noh;
+           }
+       }
+        
+        return null;
     }
 
-    public void alterarCodigo(Produtos produto) {
-        
+    public void alterarCodigo(Produtos produto, int codigo) {
+        while (buscarCodigo(codigo) != null) {
+            codigo++;           
+        }
+        produto.setCodigo(codigo);
     }
 
     public Produtos[] listar() {
@@ -105,39 +107,90 @@ public class BDGerenciador {
          return i;
     }
 
-    private int sort(Produtos s1, Produtos s2){
-       return s1.getNome().compareTo (s2.getNome());
+    private int sort(Produtos obj1, Produtos obj2){
+        int r = 0;
+        try{
+            String s1 = obj1.getNome();
+            String s2 = obj2.getNome();
+            r = s1.compareTo (s2);
+        }catch(Exception e){}
+       return r;
+    }
+    
+    private int sort(int obj1, int obj2){
+        int r = 0;
+        try{
+            Integer i1 = obj1;
+            Integer i2 = obj2;
+            r = i1.compareTo (i2);
+        }catch(Exception e){}
+       return r;
     }
     
     public void ordenarporNome() {
+        if(this.length() == 0) return;
+        
         Produtos temp;
         Produtos noh;
+        Produtos NohAtual;
         int i;
         int s = 1;
-        while(s != 1){
+        int length =  this.length();
+        while(s == 1){
             s = 0;
-            for(i = 0, noh = this.primeiro; noh.getProximo() != this.ultimo; i++, noh = noh.getProximo()){
-                if(i == 0){
-                    //Vez do primeiro
+            //Vez do primeiro
+            if(sort(this.primeiro, this.primeiro.getProximo()) >= 1){
+                s = 1;
+                temp = this.primeiro;
+                this.primeiro = this.primeiro.getProximo();
+                temp.setProximo(this.primeiro.getProximo());
+                this.primeiro.setProximo(temp);
+            }
+            for(i = 0, noh = this.primeiro; i < length-2; i++, noh = noh.getProximo()){
+                NohAtual = noh.getProximo();
+                 if( sort(NohAtual, NohAtual.getProximo()) >= 1){
                     s = 1;
-                    if(sort(noh, noh.getProximo()) == 1){
-                        temp = noh;
-                        this.primeiro = noh.getProximo();
-                        temp.setProximo(this.primeiro.getProximo());
-                        this.primeiro.setProximo(temp);
-                    }
-                }
-                if( sort(noh.getProximo(), noh.getProximo().getProximo()) == 1){
-                    s = 1;
-                    temp = noh.getProximo();
-                    noh.setProximo( temp.getProximo());
-                    temp.setProximo(noh.getProximo().getProximo());
-                    noh.getProximo().setProximo(temp);
+                    temp = NohAtual.getProximo();
+                    NohAtual.setProximo(temp.getProximo());
+                    temp.setProximo(NohAtual);
+                    noh.setProximo(temp);
                 }
             }
         }
     }
 
+    public void ordenarporCodigo() {
+        if(this.length() == 0) return;
+        
+        Produtos temp;
+        Produtos noh;
+        Produtos NohAtual;
+        int i;
+        int s = 1;
+        int length =  this.length();
+        while(s == 1){
+            s = 0;
+            //Vez do primeiro
+            if(sort(this.primeiro.getCodigo(), this.primeiro.getProximo().getCodigo()) >= 1){
+                s = 1;
+                temp = this.primeiro;
+                this.primeiro = this.primeiro.getProximo();
+                temp.setProximo(this.primeiro.getProximo());
+                this.primeiro.setProximo(temp);
+            }
+            for(i = 0, noh = this.primeiro; i < length-2; i++, noh = noh.getProximo()){
+                NohAtual = noh.getProximo();
+                 if(sort(NohAtual.getCodigo(), NohAtual.getProximo().getCodigo()) >= 1){
+                    s = 1;
+                    temp = NohAtual.getProximo();
+                    NohAtual.setProximo(temp.getProximo());
+                    temp.setProximo(NohAtual);
+                    noh.setProximo(temp);   
+                }
+            }
+        }
+    }
+    
     private String linha(Produtos produto) {
         return produto.getCodigo() + "     " + produto.getNome() + "     " + produto.getQuantidade() + produto.getValor();
     }
